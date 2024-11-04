@@ -49,10 +49,10 @@ make run
 
 ### Execução de Teste Único
 
-Para executar um teste específico, utilize a variável `TEST` com a regra `run`:
+Para executar um teste específico, utilize a variável `FILES` com a regra `run`:
 
 ```sh
-make run TEST=get_next_line_utils
+make run FILES=get_next_line_utils
 ```
 
 Substitua `get_next_line_utils` pelo nome da função que você deseja testar.
@@ -81,12 +81,12 @@ make re
 
 ### Uso de Variáveis
 
-### TEST
+### FILES
 
-A variável `TEST` é usada para especificar qual teste deve ser compilado. Por exemplo:
+A variável `FILES` é usada para especificar qual teste deve ser compilado. Por exemplo:
 
 ```sh
-make TEST=get_next_line_utils
+make FILES=get_next_line_utils
 ```
 
 ### TARGET
@@ -109,10 +109,10 @@ make debug
 
 ### Execução de Teste Único para Depuração
 
-Para executar um teste específico em modo de depuração, utilize a regra `debug` com a variável `TEST`:
+Para executar um teste específico em modo de depuração, utilize a regra `debug` com a variável `FILES`:
 
 ```sh
-make debug TEST=get_next_line_utils
+make debug FILES=get_next_line_utils
 ```
 
 Substitua `get_next_line_utils` pelo nome da função que você deseja testar.

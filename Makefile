@@ -4,6 +4,18 @@ CFLAGS			=	-Wall -Wextra -Werror -g
 LDFLAGS			=	-lrt -lm -L$(LIBDIR) -lmocks
 RM				=	rm -rf
 
+# Color variables
+COLOR_RESET		=	\033[0m
+COLOR_PURPLE	=	\033[1;35m
+COLOR_WHITE		=	\033[0;37m
+COLOR_RED		=	\033[1;31m
+COLOR_LIGHT_RED	=	\033[0;31m
+COLOR_YELLOW	=	\033[1;33m
+COLOR_BLUE		=	\033[1;34m
+COLOR_GREEN		=	\033[1;32m
+COLOR_LIGHT_GREEN = \033[0;32m
+COLOR_CYAN		=	\033[1;36m
+
 # Directories and files
 TARGET			=	get_next_line
 SRCDIR			=	$(TARGET)
@@ -68,111 +80,111 @@ OUT_FILES		=	$(addsuffix .out, $(addprefix $(BINDIR)/$(TARGET)/test_, $(EXIST_FI
 .PHONY: all single multiple run run-single run-multiple debug debug-single debug-multiple clean fclean re
 
 # Default target: builds the library and all tests
-all: $(if $(filter 1,$(words $(TEST))),single,multiple)
-	@echo "\033[1;35mAvailable files:\033[0m"
-	@echo "\033[0;37m$(EXIST_FILE)\033[0m" | xargs -n 2 | column -t
+all: $(if $(filter 1,$(words $(FILES))),single,multiple)
+	@echo "$(COLOR_PURPLE)Available files:$(COLOR_RESET)"
+	@echo "$(COLOR_WHITE)$(EXIST_FILE)$(COLOR_RESET)" | xargs -n 2 | column -t
 	@if [ "$(filter $(FILES),$(MISS_FILE))" ]; then \
-		echo "\033[1;31mMissing files:\033[0m"; \
-		echo "\033[0;31m$(MISS_FILE)\033[0m" | xargs -n 2 | column -t; \
+		echo "$(COLOR_RED)Missing files:$(COLOR_RESET)"; \
+		echo "$(COLOR_LIGHT_RED)$(MISS_FILE)$(COLOR_RESET)" | xargs -n 2 | column -t; \
 	fi
 
 # Single function build: builds the library and a single test executable
 single: $(MOCKLIB) $(BINDIR)/test.out
-	@echo "\033[1;33mTest for $(TEST) is available at: $(BINDIR)/test.out\033[0m"
+	@echo "$(COLOR_YELLOW)Test for $(FILES) is available at: $(BINDIR)/test.out$(COLOR_RESET)"
 
 # Build all tests
 multiple: $(MOCKLIB) $(OUT_FILES)
-	@echo "\033[1;33mAll tests are available at: $(BINDIR)/$(TARGET)/\033[0m"
+	@echo "$(COLOR_YELLOW)All tests are available at: $(BINDIR)/$(TARGET)/$(COLOR_RESET)"
 
 # Run target: runs the appropriate tests based on the number of tests
-run: $(if $(filter 1,$(words $(TEST))),run-single,run-multiple)
+run: $(if $(filter 1,$(words $(FILES))),run-single,run-multiple)
 
 # Run single test target
 run-single: single
-	@echo "\033[1;34mRunning test: $(TEST)\033[0m"; \
+	@echo "$(COLOR_BLUE)Running test: $(FILES)$(COLOR_RESET)"; \
 	$(LIBRARY_PATH_VAR)=$(LIBDIR) $(BINDIR)/test.out; \
 
 # Run multiple tests target
 run-multiple: multiple
 	@for bin in $(OUT_FILES); do \
 		bin_name=$$(basename $$bin | sed 's/^test_//' | sed 's/\.out$$//'); \
-		echo "\033[1;34mRunning test: $$(echo $$bin_name)\033[0m"; \
+		echo "$(COLOR_BLUE)Running test: $$(echo $$bin_name)$(COLOR_RESET)"; \
 		$(LIBRARY_PATH_VAR)=$(LIBDIR) $$bin; \
 	done
 	@if [ "$(filter $(FILES),$(MISS_FILE))" ]; then \
-		echo "\033[1;31mMissing files:\033[0m"; \
-		echo "\033[0;31m$(MISS_FILE)\033[0m" | xargs -n 2 | column -t; \
+		echo "$(COLOR_RED)Missing files:$(COLOR_RESET)"; \
+		echo "$(COLOR_LIGHT_RED)$(MISS_FILE)$(COLOR_RESET)" | xargs -n 2 | column -t; \
 	fi
 
 # Debug target: debugs the appropriate tests based on the number of tests
-debug: $(if $(filter 1,$(words $(TEST))),debug-single,debug-multiple)
+debug: $(if $(filter 1,$(words $(FILES))),debug-single,debug-multiple)
 
 # Debug single test target
 debug-single: single
-	@echo "\033[1;35mDebugging test: $(TEST)\033[0m"
+	@echo "$(COLOR_PURPLE)Debugging test: $(FILES)$(COLOR_RESET)"
 	@$(LIBRARY_PATH_VAR)=$(LIBDIR) gdb --args $(BINDIR)/test.out
 
 # Debug multiple tests target
 debug-multiple: all
 	@for bin in $(OUT_FILES); do \
 		bin_name=$$(basename $$bin | sed 's/^test_//' | sed 's/\.out$$//'); \
-		echo "\033[1;35mDebugging test: $$(echo $$bin_name)\033[0m"; \
+		echo "$(COLOR_PURPLE)Debugging test: $$(echo $$bin_name)$(COLOR_RESET)"; \
 		$(LIBRARY_PATH_VAR)=$(LIBDIR) gdb --args $$bin; \
 	done
 	@if [ "$(filter $(FILES),$(MISS_FILE))" ]; then \
-		echo "\033[1;31mMissing files:\033[0m"; \
-		echo "\033[0;31m$(MISS_FILE)\033[0m" | xargs -n 2 | column -t; \
+		echo "$(COLOR_RED)Missing files:$(COLOR_RESET)"; \
+		echo "$(COLOR_LIGHT_RED)$(MISS_FILE)$(COLOR_RESET)" | xargs -n 2 | column -t; \
 	fi
 
 # Compile the shared library for mocks
 $(MOCKLIB): $(MOCK_OBJS)
 	@mkdir -p $(LIBDIR)
 	@$(CC) $(CFLAGS) $(SHARED_LIB_FLAGS) -o $@ $^ -ldl
-	@echo "\033[1;32mBuild complete: mock library\033[0m"
+	@echo "$(COLOR_GREEN)Build complete: mock library$(COLOR_RESET)"
 
 # Rule to compile .c files in $(MOCKDIR) to .o files
 $(MOCKDIR)/%.o: $(MOCKDIR)/%.c
 	@$(CC) $(CFLAGS) -fPIC -c -o $@ $<
-	@echo "\033[0;32mCompiled: $<\033[0m"
+	@echo "$(COLOR_LIGHT_GREEN)Compiled: $<$(COLOR_RESET)"
 
 # Rule to compile .c files in $(SRCDIR) to .o files
 $(SRCDIR)/%.o: $(SRCDIR)/%.c $(HEADER)
 	@$(COMPILE.c) $(INC) $(OUTPUT_OPTION) $<
-	@echo "\033[0;32mCompiled: $<\033[0m"
+	@echo "$(COLOR_LIGHT_GREEN)Compiled: $<$(COLOR_RESET)"
 
 # Rule to compile .c files in $(TESTDIR) to .o files
 $(TESTDIR)/%.o: $(TESTDIR)/%.c $(HEADER) $(TEST_HEADER)
 	@$(COMPILE.c) $(TEST_INC) $(OUTPUT_OPTION) $<
-	@echo "\033[0;32mCompiled: $<\033[0m"
+	@echo "$(COLOR_LIGHT_GREEN)Compiled: $<$(COLOR_RESET)"
 
 # Build target: compiles and links a test executable
 $(BINDIR)/$(TARGET)/test_get_next_line_utils.out: $(UTILS_OBJS) $(GNL_UTILS_OBJS) $(TESTDIR)/test_get_next_line_utils.o $(SRCDIR)/get_next_line_utils.o
 	@mkdir -p $(BINDIR)/$(TARGET)
 	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
-	@echo "\033[1;32mBuild complete: $@\033[0m"
+	@echo "$(COLOR_GREEN)Build complete: $@$(COLOR_RESET)"
 
 # Build target: compiles and links a test executable
 $(BINDIR)/$(TARGET)/test_get_next_line.out: $(UTILS_OBJS) $(TESTDIR)/test_get_next_line.o $(SRCDIR)/get_next_line.o
 	@mkdir -p $(BINDIR)/$(TARGET)
 	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
-	@echo "\033[1;32mBuild complete: $@\033[0m"
+	@echo "$(COLOR_GREEN)Build complete: $@$(COLOR_RESET)"
 
 # Build target to debug a selected test: compiles and links a single test debug executable
-$(BINDIR)/test.out: $(if $(filter get_next_line_utils,$(TEST)), $(GNL_UTILS_OBJS)) $(UTILS_OBJS) $(TEST_OBJS) $(OBJS)
+$(BINDIR)/test.out: $(if $(filter get_next_line_utils,$(FILES)), $(GNL_UTILS_OBJS)) $(UTILS_OBJS) $(TEST_OBJS) $(OBJS)
 	@echo $(EXIST_FILE)
 	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
-	@echo "\033[1;32mBuild complete: test.out\033[0m"
+	@echo "$(COLOR_GREEN)Build complete: test.out$(COLOR_RESET)"
 
 # Clean target
 clean:
 	@$(RM) $(OBJS) $(TEST_OBJS) $(UTILS_OBJS) $(GNL_UTILS_OBJS) $(MOCK_OBJS)
-	@echo "\033[1;36mClean complete\033[0m"
+	@echo "$(COLOR_CYAN)Clean complete$(COLOR_RESET)"
 
 # Full clean target
 fclean: clean
 	@$(RM) $(BINDIR) $(LIBDIR)
-	@echo "\033[1;34mFull clean complete\033[0m"
+	@echo "$(COLOR_BLUE)Full clean complete$(COLOR_RESET)"
 
 # Rebuild target
 re: fclean all

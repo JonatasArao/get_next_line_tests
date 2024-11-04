@@ -4,7 +4,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "if [ \"$(basename ${fileDirname})\" == \"tests\" ]; then make TEST=$(echo ${fileBasenameNoExtension} | sed 's/^test_//'); else make TARGET=$(echo ${relativeFileDirname} | awk -F '/' '{print ($1)}') TEST=${fileBasenameNoExtension}; fi",
+            "command": "if [ \"$(basename ${fileDirname})\" == \"tests\" ]; then make FILES=$(echo ${fileBasenameNoExtension} | sed 's/^test_//'); else make TARGET=$(echo ${relativeFileDirname} | awk -F '/' '{print ($1)}') FILES=${fileBasenameNoExtension}; fi",
             "group": "build",
             "problemMatcher": "$gcc"
         }
