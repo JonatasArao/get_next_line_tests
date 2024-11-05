@@ -49,7 +49,7 @@ make run
 
 ### Execução de Teste Único
 
-Para executar um teste específico, utilize a variável `FILES` com a regra `run`:
+Para executar o teste de um arquivo específico, utilize a variável `FILES` com a regra `run`:
 
 ```sh
 make run FILES=get_next_line_utils
@@ -83,18 +83,18 @@ make re
 
 ### FILES
 
-A variável `FILES` é usada para especificar qual teste deve ser compilado. Por exemplo:
+A variável `FILES` é usada para especificar qual arquivo deve ser compilado. Por exemplo:
 
 ```sh
 make FILES=get_next_line_utils
 ```
 
-### TARGET
+### SRCDIR
 
-A variável `TARGET` é usada para especificar o diretório do projeto. A pasta pode ter qualquer nome. Por exemplo:
+A variável `SRCDIR` é usada para especificar o diretório do projeto. A pasta pode ter qualquer nome. Por exemplo:
 
 ```sh
-make TARGET=get_next_line
+make SRCDIR=get_next_line
 ```
 
 ## Depuração
@@ -115,7 +115,7 @@ Para executar um teste específico em modo de depuração, utilize a regra `debu
 make debug FILES=get_next_line_utils
 ```
 
-Substitua `get_next_line_utils` pelo nome da função que você deseja testar.
+Substitua `get_next_line_utils` pelo nome do arquivo que você deseja testar.
 
 ## Modelo para Criação de Novos Testes
 
@@ -177,7 +177,46 @@ int main(void) {
 5. **Crie a suíte de testes**: Agrupe os testes em uma suíte de testes.
 6. **Implemente a função `main`**: A função `main` deve executar a suíte de testes e gerar o relatório.
 
-### Exemplo de Teste
+### Diferenciação dos Testes
+
+#### Testes de `test_get_next_line_utils`
+
+Os testes de `test_get_next_line_utils` são focados em funções utilitárias que auxiliam a função principal `get_next_line`. Exemplos de funções utilitárias incluem `ft_strlen`, `ft_strchr`, `ft_strdup`, entre outras. Estes testes verificam se essas funções estão funcionando corretamente em diferentes cenários, como strings vazias, strings com caracteres especiais, etc.
+
+Para implementar a função `main` para `test_get_next_line_utils`, siga o modelo abaixo:
+
+```c
+int	main(void)
+{
+	printf(PRINTCYAN("\nTesting: ft_strlen\n"));
+	test_ft_strlen();
+	return (0);
+}
+```
+
+Os testes para `ft_strlen`, por exemplo, devem estar numa função como:
+
+```c
+int test_ft_strlen(void) {
+	MU_RUN_SUITE(ft_strlen_test_suite);
+	MU_REPORT();
+	return MU_EXIT_CODE;
+}
+```
+
+E devem ser chamados na função `main` de `test_get_next_line_utils`.
+
+#### Testes de `test_get_next_line`
+
+Os testes de `test_get_next_line` são focados na função principal `get_next_line`, que lê uma linha de um arquivo descritor. Os testes verificam se a função está lendo corretamente as linhas, lidando com diferentes tamanhos de buffer, gerenciando o final do arquivo, entre outros casos de uso. Estes testes são mais complexos e abrangem a funcionalidade principal do projeto.
+
+Para implementar a função `main` para `test_get_next_line`, siga o modelo abaixo:
+
+```c
+int	main(void)
+{
+	return (0);
+}
 
 Veja um exemplo de teste para a função `ft_strcmp`:
 
@@ -197,7 +236,7 @@ MU_TEST(test_ft_strcmp_s1_a_s2_a)
 }
 ```
 
-Siga este modelo para criar testes consistentes e bem estruturados para os exercícios da Piscine Reloaded.
+Siga este modelo para criar testes consistentes e bem estruturados.
 
 ## Configuração do VSCode
 

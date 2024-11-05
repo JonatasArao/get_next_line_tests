@@ -6,12 +6,39 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 11:34:16 by jarao-de          #+#    #+#             */
-/*   Updated: 2024/11/04 15:32:18 by jarao-de         ###   ########.fr       */
+/*   Updated: 2024/11/05 22:25:01 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.h"
 # include "minunit.h"
+
+int	capture_segfault_ft_strlen(size_t (*f)(const char *), const char *s)
+{
+	pid_t pid = fork();
+	if (pid == 0)
+	{
+		// Child process executes the test
+		f(s);
+		exit(0);
+	}
+	else if (pid > 0)
+	{
+		// Parent process waits for the child
+		int status;
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGSEGV)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	else
+	{
+		perror("fork");
+		exit(1);
+	}
+}
 
 MU_TEST(test_ft_strlen_null_string)
 {
@@ -173,7 +200,7 @@ MU_TEST(test_ft_strlen_null_pointer)
 
 	// ACT & ASSERT
 	expected_result = 1;
-	actual_result = capture_segfault((void (*)(void *))ft_strlen, NULL);
+	actual_result = capture_segfault_ft_strlen(&ft_strlen, NULL);
 	mu_assert_warning(expected_result == actual_result, "Expected segmentation fault, but it did not occur.");
 }
 
