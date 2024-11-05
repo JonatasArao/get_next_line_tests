@@ -206,6 +206,8 @@ int test_ft_strlen(void) {
 
 E devem ser chamados na função `main` de `test_get_next_line_utils`.
 
+A função deve estar dentro do arquivo `tests/gnl_utils_functions/test_ft_strlen.c`.
+
 #### Testes de `test_get_next_line`
 
 Os testes de `test_get_next_line` são focados na função principal `get_next_line`, que lê uma linha de um arquivo descritor. Os testes verificam se a função está lendo corretamente as linhas, lidando com diferentes tamanhos de buffer, gerenciando o final do arquivo, entre outros casos de uso. Estes testes são mais complexos e abrangem a funcionalidade principal do projeto.
@@ -213,10 +215,12 @@ Os testes de `test_get_next_line` são focados na função principal `get_next_l
 Para implementar a função `main` para `test_get_next_line`, siga o modelo abaixo:
 
 ```c
-int	main(void)
-{
-	return (0);
+int main(void) {
+	MU_RUN_SUITE(get_next_line_test_suite);
+	MU_REPORT();
+	return MU_EXIT_CODE;
 }
+```
 
 Veja um exemplo de teste para a função `ft_strcmp`:
 
