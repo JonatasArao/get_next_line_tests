@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   test_ft_strlen.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 11:34:16 by jarao-de          #+#    #+#             */
-/*   Updated: 2024/11/05 22:25:01 by jarao-de         ###   ########.fr       */
+/*   Updated: 2024/11/06 07:05:19 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tests.h"
 # include "minunit.h"
 
-int	capture_segfault_ft_strlen(size_t (*f)(const char *), const char *s)
+static int	capture_segfault_ft_strlen(size_t (*f)(const char *), const char *s)
 {
 	pid_t pid = fork();
 	if (pid == 0)

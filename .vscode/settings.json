@@ -30,6 +30,7 @@
 		"signal.h": "c",
 		"gnl_tests.h": "c",
 		"stdarg.h": "c",
-		"tests.h": "c"
+		"tests.h": "c",
+		"get_next_line.h": "c"
 	}
 }

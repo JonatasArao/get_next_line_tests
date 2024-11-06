@@ -57,8 +57,7 @@ HEADER		=	$(SRCDIR)/get_next_line.h
 TEST_HEADER	=	$(TESTDIR)/tests.h
 
 # Source and object files
-FILES		=	get_next_line \
-				get_next_line_utils
+FILES		=	get_next_line get_next_line_utils
 EXIST_FILES	=	$(foreach files,$(FILES),$(if $(wildcard $(SRCDIR)/$(files).c),$(files),))
 MISS_FILES	=	$(foreach files,$(FILES),$(if $(wildcard $(SRCDIR)/$(files).c),,$(files)))
 SRCS		=	$(addprefix $(SRCDIR)/, $(addsuffix .c, $(EXIST_FILES)))
@@ -67,7 +66,7 @@ TEST_SRCS	=	$(addprefix $(TESTDIR)/test_, $(addsuffix .c, $(EXIST_FILES)))
 TEST_OBJS	=	$(TEST_SRCS:.c=.o)
 
 # Utility functions for get_next_line
-GNL_UTILS				=	ft_strlen
+GNL_UTILS				=	ft_strlen ft_strchr ft_strdup ft_substr ft_strjoin
 GNL_UTILS_TESTS_SRCS	=	$(addprefix $(TESTDIR)/gnl_utils_functions/test_, $(addsuffix .c, $(GNL_UTILS)))
 GNL_UTILS_TESTS_OBJS	=	$(GNL_UTILS_TESTS_SRCS:.c=.o)
 
@@ -153,15 +152,17 @@ $(BINDIR)/$(SRCDIR)/test_get_next_line_utils.out: \
 # Build target: compiles and links a test executable
 $(BINDIR)/$(SRCDIR)/test_get_next_line.out: \
 	$(TESTDIR)/test_get_next_line.o \
+	$(SRCDIR)/get_next_line_utils.o \
 	$(OBJS) \
 	$(MOCKLIB)
 	@mkdir -p $(BINDIR)/$(SRCDIR)
-	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 	@echo "$(COLOR_GREEN)Build complete: $@$(COLOR_RESET)"
 
 # Build target to debug a selected test: compiles and links a single test debug executable
 $(BINDIR)/test.out: \
 	$(if $(filter get_next_line_utils,$(EXIST_FILES)), $(GNL_UTILS_TESTS_OBJS)) \
+	$(if $(filter get_next_line,$(EXIST_FILES)), $(SRCDIR)/get_next_line_utils.o) \
 	$(TEST_OBJS) \
 	$(OBJS) \
 	$(MOCKLIB)
