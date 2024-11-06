@@ -156,7 +156,7 @@ $(BINDIR)/$(SRCDIR)/test_get_next_line.out: \
 	$(OBJS) \
 	$(MOCKLIB)
 	@mkdir -p $(BINDIR)/$(SRCDIR)
-	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 	@echo "$(COLOR_GREEN)Build complete: $@$(COLOR_RESET)"
 
 # Build target to debug a selected test: compiles and links a single test debug executable
