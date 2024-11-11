@@ -6,13 +6,14 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 08:46:21 by jarao-de          #+#    #+#             */
-/*   Updated: 2024/11/06 10:12:50 by jarao-de         ###   ########.fr       */
+/*   Updated: 2024/11/08 06:52:10 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GNL_TESTS_H
 # define GNL_TESTS_H
 # include <stdio.h>
+#include <stdint.h>
 # include <stdlib.h>
 # include <stdarg.h>
 # include <sys/types.h>
@@ -59,6 +60,12 @@ int		test_ft_substr(void);
 
 char	*ft_strjoin(char const *s1, char const *s2);
 int		test_ft_strjoin(void);
+
+char	*ft_strjoin(char const *s1, char const *s2);
+int		test_ft_strjoin(void);
+
+void	*ft_calloc(size_t nmemb, size_t size);
+int		test_ft_calloc(void);
 
 char *get_next_line(int fd);
 
