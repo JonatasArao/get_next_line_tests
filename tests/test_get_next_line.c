@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 09:07:39 by jarao-de          #+#    #+#             */
-/*   Updated: 2024/11/11 14:25:33 by jarao-de         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:04:48 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ static void	create_test_files(void)
 		fprintf(file, "No newline at end");
 		fclose(file);
 	}
+
+	file = fopen("only_newline.txt", "w");
+	if (file)
+	{
+		fprintf(file, "\n");
+		fclose(file);
+	}
 }
 
 static void	delete_test_files(void)
@@ -51,6 +58,7 @@ static void	delete_test_files(void)
 	remove("empty_file.txt");
 	remove("single_line.txt");
 	remove("no_newline.txt");
+	remove("only_newline.txt");
 }
 
 MU_TEST(test_get_next_line_multiple_lines)
@@ -141,12 +149,34 @@ MU_TEST(test_get_next_line_no_newline)
 	close(fd);
 }
 
+MU_TEST(test_get_next_line_only_newline)
+{
+	// ARRANGE
+	int		fd;
+	char	*expected_result;
+	char	*actual_result;
+
+	// ACT & ASSERT
+	fd = open("only_newline.txt", O_RDONLY);
+	expected_result = "\n";
+	actual_result = get_next_line(fd);
+	mu_assert_string_eq(expected_result, actual_result);
+	expected_result = NULL;
+	actual_result = get_next_line(fd);
+	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
+	close(fd);
+}
+
 MU_TEST_SUITE(get_next_line_test_suite)
 {
 	MU_RUN_TEST(test_get_next_line_empty_file);
 	MU_RUN_TEST(test_get_next_line_single_line);
 	MU_RUN_TEST(test_get_next_line_multiple_lines);
 	MU_RUN_TEST(test_get_next_line_no_newline);
+	MU_RUN_TEST(test_get_next_line_only_newline);
 }
 
 int main(void)
