@@ -66,7 +66,7 @@ TEST_SRCS	=	$(addprefix $(TESTDIR)/test_, $(addsuffix .c, $(EXIST_FILES)))
 TEST_OBJS	=	$(TEST_SRCS:.c=.o)
 
 # Utility functions for get_next_line
-GNL_UTILS				=	ft_strlen ft_strchr ft_strdup ft_substr ft_strjoin
+GNL_UTILS				=	ft_strchr ft_substr ft_strjoin
 GNL_UTILS_TESTS_SRCS	=	$(addprefix $(TESTDIR)/gnl_utils_functions/test_, $(addsuffix .c, $(GNL_UTILS)))
 GNL_UTILS_TESTS_OBJS	=	$(GNL_UTILS_TESTS_SRCS:.c=.o)
 
